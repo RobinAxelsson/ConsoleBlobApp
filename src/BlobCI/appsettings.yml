@@ -1,1 +1,3 @@
-CONNECTION_STRING: "PlaceHolder"
+#CONNECTION_STRING: "PlaceHolder"
+container-name: "blobcontainer"
+file: "./img/test.png"
