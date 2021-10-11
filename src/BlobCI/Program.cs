@@ -6,14 +6,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using CommandLine;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 
 namespace BlobCI
 {
     class Program
     {
-        private static BlobServiceClient _blobServiceClient;
         static async Task Main(string[] args)
         {
             var config = new ConfigurationBuilder()
@@ -24,49 +25,24 @@ namespace BlobCI
 
             var cs = config["CONNECTION_STRING"] ??
                 throw new ArgumentNullException("You need to enter a connection string");
-            var containerName = config["container-name"] ??
-                throw new ArgumentNullException("You need to add container name");
 
-            _blobServiceClient = new BlobServiceClient(config["CONNECTION_STRING"]);
+            BlobContainerClient container = null;
 
-            BlobContainerClient containerClient = await TryGetBlobContainerAsync(containerName) ??
-                throw new ArgumentNullException("Container can't be null.");
-
-
-            var path = File.Exists(args[0]) ? args[0] : Path.Combine(Environment.CurrentDirectory, args[0]);
-
-            BlobClient blobClient = containerClient.GetBlobClient(Path.GetFileName(path));
-            Console.WriteLine(path);
-
-            using (FileStream fs = File.OpenRead(path))
+            CommandLine.Parser.Default.ParseArguments<AddOptions, ListOptions>(args)
+            .WithParsed<IOption>(opt =>
             {
-                byte[] b = new byte[1024];
-                UTF8Encoding temp = new UTF8Encoding(true);
-                while (fs.Read(b, 0, b.Length) > 0)
+                container = new BlobContainerClient(cs, opt.Container);
+                container.CreateIfNotExists();
+            })
+            .WithParsed<AddOptions>(opt =>
+            {
+                opt.InputUris.ToList().ForEach(uri =>
                 {
-                    //await blobClient.UploadAsync()
-                    Console.WriteLine(temp.GetString(b));
-                }
-            }
-        }
-        private static async Task<BlobContainerClient> TryGetBlobContainerAsync(string name)
-        {
-            BlobContainerClient containerClient;
-            try
-            {
-                containerClient = _blobServiceClient.GetBlobContainerClient(name);
-            }
-            catch (Azure.RequestFailedException ex)
-            {
-                Console.WriteLine("Container does not Exist");
-                Console.WriteLine(ex.GetType().ToString());
-                containerClient = await _blobServiceClient.CreateBlobContainerAsync(name);
-            }
-            catch (System.Exception ex)
-            {
-                throw;
-            }
-            return containerClient;
+                    var path = File.Exists(uri) ? uri : Path.Combine(Environment.CurrentDirectory, uri);
+                    var info = container.GetBlobClient(Path.GetFileName(path)).Upload(path);
+                });
+            });
+            Console.WriteLine("End of program");
         }
     }
 }
