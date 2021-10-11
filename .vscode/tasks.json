@@ -19,6 +19,74 @@
       "problemMatcher": "$msCompile"
     },
     {
+      "label": "run-update",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "run",
+        "--project",
+        "${workspaceFolder}/src/BlobCI/BlobCI.csproj",
+        "--",
+        "update",
+        "-c",
+        "blob-ci-app",
+        "-u",
+        "./img/test2.txt"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "run-delete",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "run",
+        "--project",
+        "${workspaceFolder}/src/BlobCI/BlobCI.csproj",
+        "--",
+        "delete",
+        "-c",
+        "blob-ci-app",
+        "-b",
+        "test2.txt"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "run-download",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "run",
+        "--project",
+        "${workspaceFolder}/src/BlobCI/BlobCI.csproj",
+        "--",
+        "download",
+        "-c",
+        "blob-ci-app",
+        "-b",
+        "test2.txt",
+        "-o",
+        "./output"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "run-list",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "run",
+        "--project",
+        "${workspaceFolder}/src/BlobCI/BlobCI.csproj",
+        "--",
+        "list",
+        "-c",
+        "blob-ci-app"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
       "label": "build",
       "command": "dotnet",
       "type": "process",

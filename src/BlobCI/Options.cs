@@ -8,12 +8,19 @@ namespace BlobCI
     {
         public string Container { get; set; }
     }
-    interface IURIOption
+    [Verb("download", HelpText = "Downloads input file names to given output path.")]
+    class DownloadOptions : IOption
     {
-        public IEnumerable<string> InputUris { get; set; }
+        [Option('c', "container", Required = true, HelpText = "Container name to delete resources.")]
+        public string Container { get; set; }
+        [Option('b', "blob-names", Required = true, HelpText = "Input blob names to be downloaded")]
+        public IEnumerable<string> BlobNames { get; set; }
+
+        [Option('o', "output-folder", Required = false, HelpText = "Directory were files will be outputted")]
+        public string OutputDirectory { get; set; }
     }
     [Verb("add", HelpText = "Add file content to named blob container.")]
-    class AddOptions : IOption, IURIOption
+    class AddOptions : IOption
     {
         [Option('c', "container", Required = true, HelpText = "Container name to add resources.")]
         public string Container { get; set; }
@@ -27,18 +34,21 @@ namespace BlobCI
         public string Container { get; set; }
     }
     [Verb("update", HelpText = "Lists file resources in named blob container.")]
-    class UpdateOptions : IOption, IURIOption
+    class UpdateOptions : IOption
     {
         [Option('c', "container", Required = true, HelpText = "Container name to update resources.")]
         public string Container { get; set; }
         [Option('u', "uri", Required = true, HelpText = "Input uri to be updated.")]
         public IEnumerable<string> InputUris { get; set; }
     }
-    class DeleteOptions : IOption, IURIOption
+    [Verb("delete", HelpText = "Deletes file resources in named blob container.")]
+    class DeleteOptions : IOption
     {
-        [Option('c', "container", Required = true, HelpText = "Container name to delete resources.")]
+        [Option('c', "container", Required = true, HelpText = "Container name to delete resources from.")]
         public string Container { get; set; }
-        [Option('u', "uri", Required = true, HelpText = "Input uri to be deleted.")]
-        public IEnumerable<string> InputUris { get; set; }
+        [Option('b', "blob-names", Required = false, HelpText = "Input blob names to delete")]
+        public IEnumerable<string> BlobNames { get; set; }
+        [Option("delete-all", Required = false, HelpText = "Deletes all blobs (and container)")]
+        public bool DeleteContainer { get; set; }
     }
 }
