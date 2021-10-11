@@ -19,6 +19,21 @@
       "problemMatcher": "$msCompile"
     },
     {
+      "label": "run-no-build",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "${workspaceFolder}/src/BlobCI/bin/Debug/netcoreapp3.1/BlobCI.dll",
+        "add",
+        "-c",
+        "blob-ci-app",
+        "-u",
+        "./img/bowline.png",
+        "./img/half-hitch.png"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
       "label": "run-update",
       "command": "dotnet",
       "type": "process",

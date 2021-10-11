@@ -17,7 +17,7 @@ namespace BlobCI
             .AddEnvironmentVariables()
             .Build();
 
-            var cs = config["CONNECTION_STRING"] ??
+            var cs = config["UseDevelopmentStorage"] == "true" ? "UseDevelopmentStorage=true;" : config["CONNECTION_STRING"] ??
                 throw new ArgumentNullException("You need to enter a connection string");
 
             BlobContainerClient container = null;
