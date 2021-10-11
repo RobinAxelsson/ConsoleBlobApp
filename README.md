@@ -67,6 +67,9 @@ $Env:CONNECTION_STRING = "mystring"
 Last option is to add it to the appsettings.yml.
 ```yaml
 CONNECTION_STRING: "mystring"
+
+#For azure storage emulator
+UseDevelopmentStorage: "true"
 ```
 
 Implementation of connection string
