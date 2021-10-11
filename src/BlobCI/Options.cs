@@ -4,6 +4,7 @@ using CommandLine;
 
 namespace BlobCI
 {
+    //Specifies all the properties and input arguments used in Program.cs
     interface IOption
     {
         public string Container { get; set; }
